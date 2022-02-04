@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:hapticFeedbackEnabled="false"
+        android:onClick="takeAttendance"
+        android:text="Person 1"
+        android:textAlignment="textStart"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/check_mark"
+        android:layout_width="32dp"
+        android:layout_height="29dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="8dp"
+        android:onClick="enterSettings"
+        android:translationZ="5dp"
+        android:visibility="visible"
+        app:srcCompat="@drawable/arrow"
+        app:tint="#FFFFFF"
+        tools:srcCompat="@drawable/arrow" />
+
+</FrameLayout>
