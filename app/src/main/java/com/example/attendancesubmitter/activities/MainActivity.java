@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
 	public void enterSettings( View view ) {
 		Toast.makeText( this, "Settings", Toast.LENGTH_SHORT ).show( );
-
 	}
 
 	public void editLocation( String address ) {
