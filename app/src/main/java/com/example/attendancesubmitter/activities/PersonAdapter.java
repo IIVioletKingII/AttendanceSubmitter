@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.example.attendancesubmitter.R;
 
+import java.util.List;
+
 public class PersonAdapter extends Adapter<PersonAdapter.PersonViewHolder> {
 
-	private final String[] personTilesNamesList;
+	private final String[] namesList;
 
 	@Override
 	public PersonViewHolder onCreateViewHolder( ViewGroup parent, int viewType ) {
@@ -22,15 +24,21 @@ public class PersonAdapter extends Adapter<PersonAdapter.PersonViewHolder> {
 	}
 
 	public int getItemCount( ) {
-		return this.personTilesNamesList.length;
+		return this.namesList.length;
 	}
 
 	public void onBindViewHolder( PersonViewHolder holder, int position ) {
-		holder.bind( personTilesNamesList[position] );
+		holder.bind( namesList[position] );
 	}
 
 	public PersonAdapter( String[] list ) {
-		personTilesNamesList = list;
+		namesList = list;
+	}
+
+	public PersonAdapter( List<String> list ) {
+		namesList = new String[list.size( )];
+		for( int i = 0; i < namesList.length; i++ )
+			namesList[i] = list.get( i );
 	}
 
 	public static final class PersonViewHolder extends ViewHolder {
