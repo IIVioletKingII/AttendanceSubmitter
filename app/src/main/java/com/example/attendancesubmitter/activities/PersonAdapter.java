@@ -56,7 +56,7 @@ public class PersonAdapter extends Adapter<PersonAdapter.PersonViewHolder> {
 
 		public PersonViewHolder( View itemView ) {
 			super( itemView );
-			personTextView = itemView.findViewById( R.id.location_text );
+			personTextView = itemView.findViewById( R.id.personText );
 		}
 	}
 

@@ -4,10 +4,15 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -117,6 +122,19 @@ public class EditPersonActivity extends AppCompatActivity {
 		dateText.setText( new SimpleDateFormat( "MM/dd/yyyy" ).format( Calendar.getInstance( ).getTime( ) ) );
 	}
 
+	public void storeClub( View view ) {
+		storeClub( );
+	}
+
+	public void storeClub( ) {
+
+		DatabaseHelper databaseHelper = new DatabaseHelper( this );
+
+		databaseHelper.store( DatabaseHelper.COLUMN_CLUB, studentID, clubText.getText( ).toString( ) );
+
+		databaseHelper.close( );
+	}
+
 	public void setClub( ) {
 
 		Person person = getPerson( );
@@ -152,7 +170,6 @@ public class EditPersonActivity extends AppCompatActivity {
 		return persons;
 	}
 
-
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	private void checkInternetPermissions( ) {
 		if( checkSelfPermission( Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED ) {
@@ -176,10 +193,11 @@ public class EditPersonActivity extends AppCompatActivity {
 		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
 	}
 
-	@RequiresApi(api = Build.VERSION_CODES.M)
+	@SuppressLint("NewApi")
 	public void submitAttendance( View view ) {
 		// check for internet
 		name = ((Button) view).getText( ).toString( );
+		save( );
 		checkInternetPermissions( );
 	}
 
@@ -192,13 +210,31 @@ public class EditPersonActivity extends AppCompatActivity {
 
 		URL url = null;
 		try {
-//			url = FormUtils.getResponseURL( MainActivity.FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
-			url = FormUtils.getResponseURL( MainActivity.FORM_ID, getDate( ), person.getName( ), MainActivity.CLUB_ID );
+
+			url = FormUtils.getResponseURL(
+					MainActivity.FORM_ID,
+					Calendar.getInstance( ),
+					person.getLastName( ),
+					person.getFirstName( ),
+					person.getStudentID( ),
+					MainActivity.CLUB_ID );
+
+			Log.d( "URL", "" + url );
+			Log.d( "PERSON", "" + person );
+
+//			WebView webView = findViewById( R.id.webView );
+//			WebSettings settings = webView.getSettings( );
+//			settings.setJavaScriptEnabled( true );
+//			webView.loadUrl( url.toString( ) );
+
+			Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url.toString( ) ) );
+			startActivity( intent );
+
 		} catch( MalformedURLException e ) {
 			e.printStackTrace( );
 		}
 
-		FormUtils.submitURL( url );
+//		FormUtils.submitURL( url );
 	}
 
 	@Override
@@ -222,6 +258,7 @@ public class EditPersonActivity extends AppCompatActivity {
 		storeStudentID( );
 		// saves the meter summaries
 		storeName( );
+
 	}
 
 	public void delete( View view ) {

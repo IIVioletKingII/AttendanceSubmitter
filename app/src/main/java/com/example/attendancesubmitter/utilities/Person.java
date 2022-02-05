@@ -57,6 +57,6 @@ public class Person {
 
 	@NonNull
 	public String toString( ) {
-		return firstName + " " + lastName + " - " + studentID;
+		return firstName + " " + lastName + " - " + studentID + " - " + club;
 	}
 }

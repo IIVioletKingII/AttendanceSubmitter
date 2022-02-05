@@ -10,16 +10,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.attendancesubmitter.R;
 import com.example.attendancesubmitter.databinding.ActivityMainBinding;
 import com.example.attendancesubmitter.utilities.DatabaseHelper;
 import com.example.attendancesubmitter.utilities.FormUtils;
@@ -32,8 +37,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-	//	public static String FORM_ID = "1FAIpQLScahJirT2sVrm0qDveeuiO1oZBJ5B7J0gdeI7UAZGohKEmi9g"; // original
-	public static String FORM_ID = "1FAIpQLSfefqqzKJuPUVvspDvzeFH9bQ4zoRdvQ_B-22kUOahnPFxDgg"; // SamTest
+	public static String FORM_ID = "1FAIpQLSfoLJU0ON3XtKrypUV7VmINCadxzyCqrnUroTZrUdYvG2QfJQ"; // original
+	//	public static String FORM_ID = "1FAIpQLSfefqqzKJuPUVvspDvzeFH9bQ4zoRdvQ_B-22kUOahnPFxDgg"; // SamTest
 	public static String CLUB_ID = "Robotics";
 
 	private RecyclerView recyclerView;
@@ -47,23 +52,19 @@ public class MainActivity extends AppCompatActivity {
 		ActivityMainBinding binding = ActivityMainBinding.inflate( getLayoutInflater( ) );
 		setContentView( binding.getRoot( ) );
 
-//		DatabaseHelper databaseHelper = new DatabaseHelper( this );
-
-
 		recyclerView = binding.recyclerView;
 		setRecyclerView( );
 	}
 
-
 	private void setRecyclerView( ) {
 
-		recyclerView.setAdapter( new PersonAdapter( getPersonNames( )/*new String[]{ "Sam", "Corban", "Dylan" }*/ ) );
+		recyclerView.setAdapter( new PersonAdapter( getPersonNames( ) ) );
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	private void checkInternetPermissions( ) {
 		if( checkSelfPermission( Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED ) {
-			takeAttendance( );
+			submitAttendance( );
 		} else {
 			if( shouldShowRequestPermissionRationale( Manifest.permission.INTERNET ) )
 				Toast.makeText( this, "Accessing internet is required to upload data.", Toast.LENGTH_SHORT ).show( );
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 	public void onRequestPermissionsResult( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
 		if( requestCode == REQUEST_INTERNET ) {
 			if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED )
-				takeAttendance( );
+				submitAttendance( );
 			else
 				Toast.makeText( this, "Permission was not granted. Could not upload data.", Toast.LENGTH_SHORT ).show( );
 		}
@@ -84,13 +85,13 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
-	public void takeAttendance( View view ) {
+	public void submitAttendance( View view ) {
 		// check for internet
 		name = ((Button) view).getText( ).toString( );
 		checkInternetPermissions( );
 	}
 
-	public void takeAttendance( ) {
+	public void submitAttendance( ) {
 
 		Person person = new Person( "", "", "", "" );
 		for( Person pers : getPersons( ) )
@@ -99,8 +100,22 @@ public class MainActivity extends AppCompatActivity {
 
 		URL url = null;
 		try {
-//			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
-			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), person.getName( ), CLUB_ID );
+
+			url = FormUtils.getResponseURL(
+					MainActivity.FORM_ID,
+					Calendar.getInstance( ),
+					person.getLastName( ),
+					person.getFirstName( ),
+					person.getStudentID( ),
+					MainActivity.CLUB_ID );
+
+			Log.d( "URL", "" + url );
+			Log.d( "PERSON", "" + person );
+
+			Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( url.toString( ) ) );
+			startActivity( intent );
+
+//		FormUtils.submitURL( url );
 		} catch( MalformedURLException e ) {
 			e.printStackTrace( );
 		}
