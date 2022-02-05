@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/drawable/arrow.xml" value="0.1" />
+        <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/drawable/back_arrow.xml" value="0.2025" />
+        <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/layout/activity_edit_person.xml" value="0.335" />
         <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/layout/person_item.xml" value="0.1" />
+        <entry key="..\:/Users/samde/AndroidStudioProjects/AttendanceSubmitter/app/src/main/res/layout/person_item.xml" value="0.335" />
       </map>
     </option>
   </component>

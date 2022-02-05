@@ -16,7 +16,10 @@
         android:onClick="addPerson"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:focusable="true"
+        android:contentDescription="@string/add_new_person_hint"
+        tools:ignore="UsingOnClickInXml" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

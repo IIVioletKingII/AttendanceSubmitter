@@ -28,6 +28,7 @@
         android:visibility="visible"
         app:srcCompat="@drawable/arrow"
         app:tint="#FFFFFF"
+        tools:ignore="TouchTargetSizeCheck"
         tools:srcCompat="@drawable/arrow" />
 
 </FrameLayout>

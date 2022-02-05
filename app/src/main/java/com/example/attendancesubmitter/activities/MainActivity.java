@@ -7,13 +7,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.attendancesubmitter.R;
 import com.example.attendancesubmitter.databinding.ActivityMainBinding;
 import com.example.attendancesubmitter.utilities.DatabaseHelper;
 import com.example.attendancesubmitter.utilities.FormUtils;
@@ -26,8 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-	public static String formID = "1FAIpQLScahJirT2sVrm0qDveeuiO1oZBJ5B7J0gdeI7UAZGohKEmi9g";
-	public static String clubID = "Robotics";
+	public static String FORM_ID = "1FAIpQLScahJirT2sVrm0qDveeuiO1oZBJ5B7J0gdeI7UAZGohKEmi9g";
+	public static String CLUB_ID = "Robotics";
 
 	private RecyclerView recyclerView;
 
@@ -56,22 +57,29 @@ public class MainActivity extends AppCompatActivity {
 		Toast.makeText( this, "TAKING ATTENDANCE", Toast.LENGTH_SHORT ).show( );
 		URL url = null;
 		try {
-			url = FormUtils.getResponseURL( formID, Calendar.getInstance( ), "DePoule", "Sam", 121875, clubID );
+			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
 		} catch( MalformedURLException e ) {
 			e.printStackTrace( );
 		}
-		Toast.makeText( this, "" + url, Toast.LENGTH_SHORT ).show( );
 	}
 
 	public void enterSettings( View view ) {
-		Toast.makeText( this, "Settings", Toast.LENGTH_SHORT ).show( );
+		FrameLayout parent = ((FrameLayout) view.getParent( ));
+		String name = ((Button) parent.getChildAt( 0 )).getText( ).toString( );
+		List<Person> persons = getPersons( );
+		for( int i = 0; i < persons.size( ); i++ ) {
+			if( persons.get( i ).getName( ).equals( name ) ) {
+				editPerson( persons.get( i ).getStudentID( ) );
+				return;
+			}
+		}
 	}
 
-	public void editLocation( String address ) {
+	public void editPerson( String studentID ) {
 
-//		Intent intent = new Intent( this, EditPersonActivity.class );
-//		intent.putExtra( "CONTRACT_ID", contractName ).putExtra( "LOCATION_ADDRESS", address );
-//		startActivity( intent );
+		Intent intent = new Intent( this, EditPersonActivity.class );
+		intent.putExtra( "STUDENT_ID", studentID );
+		startActivity( intent );
 	}
 
 	public void addPerson( View view ) {
@@ -84,31 +92,39 @@ public class MainActivity extends AppCompatActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder( context );
 		builder.setTitle( "Enter Contract Id" );
 		// Set an EditText view to get user input
-		final EditText input1 = new EditText( context );
-		final EditText input2 = new EditText( context );
-		final EditText input3 = new EditText( context );
-//		final GridView gridView = new GridView( context );
-//		gridView.addView( input1 );
-//		gridView.addView( input2 );
-//		gridView.addView( input3 );
+		final EditText inputStudentID = new EditText( context );
+		inputStudentID.setHint( "Student ID" );
+		inputStudentID.setInputType( InputType.TYPE_CLASS_NUMBER );
+		final EditText inputFirstName = new EditText( context );
+		inputFirstName.setHint( "First Name" );
+		final EditText inputLastName = new EditText( context );
+		inputLastName.setHint( "Last Name" );
+
+		final LinearLayout linearLayout = new LinearLayout( context );
+		linearLayout.setOrientation( LinearLayout.VERTICAL );
+		linearLayout.addView( inputStudentID );
+		linearLayout.addView( inputFirstName );
+		linearLayout.addView( inputLastName );
 		//input. // <-- wanted to try and change the underline width of the  input
-		builder.setView( input1 );
+		builder.setView( linearLayout );
 
-		builder.setPositiveButton( "Request", ( dialog, whichButton ) -> {
+		builder.setPositiveButton( "Create", ( dialog, whichButton ) -> {
 
-			String result = input1.getText( ).toString( );
+			String studentID = inputStudentID.getText( ).toString( );
+			String firstName = inputFirstName.getText( ).toString( );
+			String lastName = inputLastName.getText( ).toString( );
 
-//			new Thread( ( ) -> downloadContract( result ) ).start( );
-//
-//			createContractOptions( context );
+			DatabaseHelper databaseHelper = new DatabaseHelper( this );
+			databaseHelper.addData( new Person( studentID, firstName, lastName, CLUB_ID ) );
+			databaseHelper.close( );
+			setRecyclerView( );
 		} );
 
-		builder.setNegativeButton( "Back", ( dialog, whichButton ) -> {
+		builder.setNegativeButton( "Cancel", ( dialog, whichButton ) -> {
 			// Canceled, exit
 		} );
 		builder.show( );
 	}
-
 
 	private List<Person> getPersons( ) {
 
@@ -117,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
 		databaseHelper.close( );
 		return persons;
 	}
-
 
 	private List<String> getPersonNames( ) {
 
@@ -131,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
 		DatabaseHelper databaseHelper = new DatabaseHelper( this );
 		databaseHelper.addData( person );
 		databaseHelper.close( );
+	}
+
+	@Override
+	public void onResume( ) {
+
+		super.onResume( );
+		setRecyclerView( );
 	}
 
 }

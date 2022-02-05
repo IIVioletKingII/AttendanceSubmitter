@@ -13,9 +13,10 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public static final String PERSONS_TABLE = "LOCATION_TABLE";
+	public static final String COLUMN_STUDENT_ID = "STUDENT_ID";
 	public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
 	public static final String COLUMN_LAST_NAME = "LAST_NAME";
-	public static final String COLUMN_STUDENT_ID = "STUDENT_ID";
+	public static final String COLUMN_CLUB = "CLUB";
 
 	public DatabaseHelper( Context context ) {
 		super( context, "persons.db", null, 1 );
@@ -27,7 +28,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		String createTableStatement = "CREATE TABLE " + PERSONS_TABLE + " ("
 				+ COLUMN_STUDENT_ID + " TEXT PRIMARY KEY,"
 				+ COLUMN_FIRST_NAME + " TEXT,"
-				+ COLUMN_LAST_NAME + " TEXT"
+				+ COLUMN_LAST_NAME + " TEXT,"
+				+ COLUMN_CLUB + " TEXT"
 				+ ");";
 
 		db.execSQL( createTableStatement );
@@ -49,6 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		contentValues.put( COLUMN_STUDENT_ID, person.getStudentID( ) );
 		contentValues.put( COLUMN_FIRST_NAME, person.getFirstName( ) );
 		contentValues.put( COLUMN_LAST_NAME, person.getLastName( ) );
+		contentValues.put( COLUMN_CLUB, person.getClub( ) );
 
 		database.insert( PERSONS_TABLE, null, contentValues );
 
@@ -138,10 +141,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		if( cursor.moveToFirst( ) ) {
 			// Loop through the cursor (result set) and get addresses. Put them into the return list.
 			do {
-				String name = "";
-				name += returnList.add( cursor.getString( 1 ) );
-				name += ", ";
-				name += returnList.add( cursor.getString( 2 ) );
+
+				returnList.add( cursor.getString( 1 ) + " " + cursor.getString( 2 ) );
 
 			} while( cursor.moveToNext( ) );
 		} else {
@@ -177,8 +178,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				String studentID = cursor.getString( 0 );
 				String firstName = cursor.getString( 1 );
 				String lastName = cursor.getString( 2 );
+				String club = cursor.getString( 3 );
 
-				returnList.add( new Person( studentID, firstName, lastName ) );
+				returnList.add( new Person( studentID, firstName, lastName, club ) );
 
 			} while( cursor.moveToNext( ) );
 		} else {

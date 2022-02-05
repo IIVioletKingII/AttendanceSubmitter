@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AttendanceSubmitter.NoActionBar"
+    tools:context=".activities.EditPersonActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/edit_app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/edit_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="48dp"
+                android:fadingEdge="horizontal"
+                android:fadingEdgeLength="100dp"
+                android:requiresFadingEdge="horizontal"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="@id/edit_toolbar"
+                app:layout_constraintEnd_toEndOf="@id/edit_toolbar"
+                app:layout_constraintStart_toStartOf="@+id/edit_toolbar"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/personTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fadingEdge="horizontal"
+                        android:fadingEdgeLength="50dp"
+                        android:text="@string/person_title"
+                        android:textColor="#FFFFFF"
+                        android:textSize="25sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_app_bar_layout"
+        app:layout_constraintVertical_bias="1.0">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/centerGuideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <LinearLayout
+                android:id="@+id/beforeLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fadingEdge="horizontal"
+                android:fadingEdgeLength="100dp"
+                android:orientation="vertical"
+                android:requiresFadingEdge="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <EditText
+                    android:id="@+id/editStudentID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autofillHints="@string/enter_student_id"
+                    android:ems="18"
+                    android:hint="@string/enter_student_id"
+                    android:includeFontPadding="false"
+                    android:inputType="number"
+                    android:onClick="storeStudentID"
+                    android:textSize="18sp"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,TouchTargetSizeCheck,UsingOnClickInXml" />
+
+                <EditText
+                    android:id="@+id/editFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autofillHints="@string/enter_first_name"
+                    android:ems="18"
+                    android:hint="@string/enter_first_name"
+                    android:includeFontPadding="false"
+                    android:inputType="text"
+                    android:onClick="storeName"
+                    android:textSize="18sp"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,TouchTargetSizeCheck,UsingOnClickInXml" />
+
+                <EditText
+                    android:id="@+id/editLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autofillHints="@string/enter_last_name"
+                    android:ems="18"
+                    android:hint="@string/enter_last_name"
+                    android:includeFontPadding="false"
+                    android:inputType="text"
+                    android:onClick="storeName"
+                    android:textSize="18sp"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,TouchTargetSizeCheck,UsingOnClickInXml" />
+
+                <EditText
+                    android:id="@+id/editDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autofillHints="@string/enter_last_name"
+                    android:ems="18"
+                    android:hint="@string/enter_date"
+                    android:includeFontPadding="false"
+                    android:inputType="date"
+                    android:onClick="storeName"
+                    android:textSize="18sp"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,TextFields,TouchTargetSizeCheck,UsingOnClickInXml" />
+
+                <EditText
+                    android:id="@+id/editClub"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:autofillHints="@string/enter_last_name"
+                    android:ems="18"
+                    android:hint="@string/enter_club"
+                    android:includeFontPadding="false"
+                    android:inputType="text"
+                    android:onClick="storeName"
+                    android:textSize="18sp"
+                    tools:ignore="DuplicateSpeakableTextCheck,TextContrastCheck,TouchTargetSizeCheck,UsingOnClickInXml" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/submitAttendance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/submit_attendance"
+                android:onClick="submitAttendance"
+                android:textAlignment="center"
+                android:textColorHint="@color/button_label"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deletePerson"
+                tools:ignore="UsingOnClickInXml" />
+
+            <Button
+                android:id="@+id/deletePerson"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/delete_person"
+                android:onClick="delete"
+                android:textAlignment="center"
+                android:textColorHint="@color/button_label"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/beforeLinearLayout"
+                tools:ignore="UsingOnClickInXml" />
+
+            <Button
+                android:id="@+id/savePerson"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/save_person"
+                android:onClick="save"
+                android:textAlignment="center"
+                android:textColorHint="@color/button_label"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/centerGuideline"
+                app:layout_constraintTop_toBottomOf="@id/beforeLinearLayout" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

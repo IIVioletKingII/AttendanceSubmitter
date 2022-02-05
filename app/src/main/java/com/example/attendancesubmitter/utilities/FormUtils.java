@@ -36,7 +36,7 @@ public class FormUtils {
 		}
 	}
 
-	public static URL getResponseURL( String formID, Calendar date, String lastName, String firstName, int studentID, String club ) throws MalformedURLException {
+	public static URL getResponseURL( String formID, Calendar date, String lastName, String firstName, String studentID, String club ) throws MalformedURLException {
 
 		return Builder.formKey( formID )
 				.putDateTime( AttendanceForm.DATE, date )
@@ -48,7 +48,6 @@ public class FormUtils {
 	}
 
 	/**
-	 *
 	 * @param url url to submit
 	 * @return true if url was successfully submitted, false otherwise
 	 */

@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">AttendanceSubmitter</string>
+    <string name="add_new_person_hint">Add New Person</string>
+    <string name="enter_student_id">Enter Student ID</string>
+    <string name="enter_first_name">Enter First Name</string>
+    <string name="enter_last_name">Enter Last Name</string>
+    <string name="enter_date">Enter Date</string>
+    <string name="enter_club">Enter Club</string>
+    <string name="save_person">Save</string>
+    <string name="submit_attendance">Submit</string>
+    <string name="delete_person">Delete</string>
+    <string name="person_title">Person</string>
 </resources>
