@@ -1,15 +1,19 @@
 package com.example.attendancesubmitter.activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -24,7 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class EditPersonActivity extends AppCompatActivity {
@@ -33,6 +36,9 @@ public class EditPersonActivity extends AppCompatActivity {
 
 	private EditText studentIDText, firstNameText, lastNameText,
 			dateText, clubText;
+
+	private static final int REQUEST_INTERNET = 2;
+	public String name = "";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -109,7 +115,6 @@ public class EditPersonActivity extends AppCompatActivity {
 
 		new DateInputMask( dateText );
 		dateText.setText( new SimpleDateFormat( "MM/dd/yyyy" ).format( Calendar.getInstance( ).getTime( ) ) );
-
 	}
 
 	public void setClub( ) {
@@ -125,20 +130,6 @@ public class EditPersonActivity extends AppCompatActivity {
 		Calendar date = Calendar.getInstance( );
 		date.set( year, month - 1, day, 0, 0 );
 		return date;
-	}
-
-	public void submitAttendance( View view ) {
-		submitAttendance( );
-	}
-
-	public void submitAttendance( ) {
-		try {
-			URL url = FormUtils.getResponseURL( MainActivity.FORM_ID, getDate( ), firstNameText.getText( ).toString( ), lastNameText.getText( ).toString( ), studentID, clubText.getText( ).toString( ) );
-			Toast.makeText( this, "" + url, Toast.LENGTH_SHORT ).show( );
-//			FormUtils.submitURL( url );
-		} catch( MalformedURLException e ) {
-			e.printStackTrace( );
-		}
 	}
 
 	private Person getPerson( ) {
@@ -159,6 +150,55 @@ public class EditPersonActivity extends AppCompatActivity {
 		List<Person> persons = databaseHelper.getPersons( );
 		databaseHelper.close( );
 		return persons;
+	}
+
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void checkInternetPermissions( ) {
+		if( checkSelfPermission( Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED ) {
+			submitAttendance( );
+		} else {
+			if( shouldShowRequestPermissionRationale( Manifest.permission.INTERNET ) )
+				Toast.makeText( this, "Accessing internet is required to upload data.", Toast.LENGTH_SHORT ).show( );
+
+			requestPermissions( new String[]{ Manifest.permission.INTERNET }, REQUEST_INTERNET );
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
+		if( requestCode == REQUEST_INTERNET ) {
+			if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED )
+				submitAttendance( );
+			else
+				Toast.makeText( this, "Permission was not granted. Could not upload data.", Toast.LENGTH_SHORT ).show( );
+		}
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public void submitAttendance( View view ) {
+		// check for internet
+		name = ((Button) view).getText( ).toString( );
+		checkInternetPermissions( );
+	}
+
+	public void submitAttendance( ) {
+
+		Person person = new Person( "", "", "", "" );
+		for( Person pers : getPersons( ) )
+			if( pers.getName( ).equals( name ) )
+				person = pers;
+
+		URL url = null;
+		try {
+//			url = FormUtils.getResponseURL( MainActivity.FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
+			url = FormUtils.getResponseURL( MainActivity.FORM_ID, getDate( ), person.getName( ), MainActivity.CLUB_ID );
+		} catch( MalformedURLException e ) {
+			e.printStackTrace( );
+		}
+
+		FormUtils.submitURL( url );
 	}
 
 	@Override

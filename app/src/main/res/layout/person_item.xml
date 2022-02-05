@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="start"
         android:hapticFeedbackEnabled="false"
-        android:onClick="takeAttendance"
+        android:onClick="submitAttendance"
         android:text="Person 1"
         android:textAlignment="textStart"
         android:textSize="20sp" />

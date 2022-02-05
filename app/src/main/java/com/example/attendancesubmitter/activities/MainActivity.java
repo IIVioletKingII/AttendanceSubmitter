@@ -1,11 +1,16 @@
 package com.example.attendancesubmitter.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -27,12 +32,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-	public static String FORM_ID = "1FAIpQLScahJirT2sVrm0qDveeuiO1oZBJ5B7J0gdeI7UAZGohKEmi9g";
+	//	public static String FORM_ID = "1FAIpQLScahJirT2sVrm0qDveeuiO1oZBJ5B7J0gdeI7UAZGohKEmi9g"; // original
+	public static String FORM_ID = "1FAIpQLSfefqqzKJuPUVvspDvzeFH9bQ4zoRdvQ_B-22kUOahnPFxDgg"; // SamTest
 	public static String CLUB_ID = "Robotics";
 
 	private RecyclerView recyclerView;
 
 	private static final int REQUEST_INTERNET = 2;
+	public String name = "";
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) {
@@ -53,14 +60,52 @@ public class MainActivity extends AppCompatActivity {
 		recyclerView.setAdapter( new PersonAdapter( getPersonNames( )/*new String[]{ "Sam", "Corban", "Dylan" }*/ ) );
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void checkInternetPermissions( ) {
+		if( checkSelfPermission( Manifest.permission.INTERNET ) == PackageManager.PERMISSION_GRANTED ) {
+			takeAttendance( );
+		} else {
+			if( shouldShowRequestPermissionRationale( Manifest.permission.INTERNET ) )
+				Toast.makeText( this, "Accessing internet is required to upload data.", Toast.LENGTH_SHORT ).show( );
+
+			requestPermissions( new String[]{ Manifest.permission.INTERNET }, REQUEST_INTERNET );
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult( int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults ) {
+		if( requestCode == REQUEST_INTERNET ) {
+			if( grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED )
+				takeAttendance( );
+			else
+				Toast.makeText( this, "Permission was not granted. Could not upload data.", Toast.LENGTH_SHORT ).show( );
+		}
+		super.onRequestPermissionsResult( requestCode, permissions, grantResults );
+	}
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void takeAttendance( View view ) {
-		Toast.makeText( this, "TAKING ATTENDANCE", Toast.LENGTH_SHORT ).show( );
+		// check for internet
+		name = ((Button) view).getText( ).toString( );
+		checkInternetPermissions( );
+	}
+
+	public void takeAttendance( ) {
+
+		Person person = new Person( "", "", "", "" );
+		for( Person pers : getPersons( ) )
+			if( pers.getName( ).equals( name ) )
+				person = pers;
+
 		URL url = null;
 		try {
-			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
+//			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), "DePoule", "Sam", "121875", CLUB_ID );
+			url = FormUtils.getResponseURL( FORM_ID, Calendar.getInstance( ), person.getName( ), CLUB_ID );
 		} catch( MalformedURLException e ) {
 			e.printStackTrace( );
 		}
+
+		FormUtils.submitURL( url );
 	}
 
 	public void enterSettings( View view ) {
